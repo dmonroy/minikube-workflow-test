@@ -6,14 +6,17 @@ jobs:
   example:
     name: Example Minikube-Kubernetes Cluster interaction
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        kubernetes-version: ['v1.18', 'v1.19', 'v1.20', 'v1.21', 'v1.22', 'v1.23']
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Setup Minikube
+      - name: Setup Minikube with Kubernetes ${{ matrix.kubernetes-version }}
         uses: manusa/actions-setup-minikube@v2.4.3
         with:
-          #minikube version: 'v1.24.0'
-          kubernetes version: 'v1.23.0'
+          minikube version: 'v1.24.0'
+          kubernetes version: ${{ matrix.kubernetes-version }}
           github token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Interact with the cluster
+      - name: Interact with the cluster ${{ matrix.kubernetes-version }}
         run: kubectl get nodes
